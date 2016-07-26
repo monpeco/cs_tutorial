@@ -73,35 +73,41 @@ do
 } while (response != "Quit");
 
 */
-using System.IO;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-class Program
+namespace ConsoleApplication1
 {
-    static void Main()
+    class Program
     {
-
-        int row_size = 8;
-        int col_size = 8;
-        bool is_row_even = true;
-        
-        for (int row_index = 0; row_index < row_size; row_index++) 
+        static void Main(string[] args)
         {
-            for (int col_index = 0; col_index < col_size; col_index++) 
-            {
-                if ( ((col_index % 2 == 0) && (is_row_even)) || ((col_index % 2 != 0) && (!is_row_even)) ) 
-                {
-                    Console.Write("X");
-                }else{
-                    Console.Write("O");
-                }
-            }
-            
-        is_row_even = !is_row_even;
-        Console.WriteLine();
-        
-        }
+            int row_size = 8;
+            int col_size = 8;
+            bool is_row_even = true;
 
+            for (int row_index = 0; row_index < row_size; row_index++)
+            {
+                for (int col_index = 0; col_index < col_size; col_index++)
+                {
+                    if (((col_index % 2 == 0) && (is_row_even)) || ((col_index % 2 != 0) && (!is_row_even)))
+                    {
+                        Console.Write("X");
+                    }
+                    else
+                    {
+                        Console.Write("O");
+                    }
+                }
+
+                is_row_even = !is_row_even;
+                Console.WriteLine();
+
+            }
+            Console.ReadLine();
+        }
     }
-    
 }
