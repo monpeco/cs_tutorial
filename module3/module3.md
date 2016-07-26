@@ -1,4 +1,5 @@
 #Declaring Methods
+###Declaring Methods
  * Access modifier - this is used to control the accessibility of the method (from where it can be called)
  * private - most restrictive and allows access to the method only from within the containing class or struct
  * public - least restrictive, allowing access from any code in the application
@@ -17,6 +18,9 @@ public Boolean StartService(string serviceName)
 ```
 
 --
+
+###Declaring Methods
+```c#
 var upTime = 2000;
 var shutdownAutomatically = true;
 StartService(upTime, shutdownAutomatically);  
@@ -26,7 +30,52 @@ void StartService(int upTime, bool shutdownAutomatically)
 {
    // Perform some processing here.
 }
+```
+
 --
+
+###Returning Data
+```c#
+string serviceName = GetServiceName();
+string GetServiceName()
+{
+   return "FourthCoffee.SalesService";
+}
+```
+The above example shows returning a single value from the method.   There may be times when you would prefer to return multiple values from a method.  There are three approaches that you can take to accomplish this:
+
+* Return an array or collection
+
+* Use the out keyword
+
+
+```c#
+ReturnMultiOut(out first, out sValue);
+Console.WriteLine("{0}, {1}", first.ToString(), sValue);
+
+static void ReturnMultiOut(out int i, out string s)
+{
+    i = 25;
+    s = "using out";
+}
+```
+
+* Use the ref keyword
+
+```c#
+// Using ref requires that the variables be initialized first
+sValue = "";
+ReturnMultiRef(ref first, ref sValue);
+Console.WriteLine("{0}, {1}", first.ToString(), sValue);
+
+ static void ReturnMultiRef(ref int i, ref string s)
+ {
+        i = 50;
+        s = "using ref";
+ }
+```
+
+
 string serviceName = GetServiceName();
 string GetServiceName()
 {
