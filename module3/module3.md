@@ -75,30 +75,43 @@ Console.WriteLine("{0}, {1}", first.ToString(), sValue);
  }
 ```
 
+--
 
-string serviceName = GetServiceName();
-string GetServiceName()
+###Overloading Methods
+```c#
+void StopService()
 {
-   return "FourthCoffee.SalesService";
+   // This method accepts no arguments
 }
-
-// Using out on the parameters
-ReturnMultiOut(out first, out sValue);
-Console.WriteLine("{0}, {1}", first.ToString(), sValue);
-
-static void ReturnMultiOut(out int i, out string s)
+void StopService(string serviceName)
 {
-    i = 25;
-    s = "using out";
+   // This method overload accepts a single string argument
 }
+void StopService(int serviceId)
+{
+   // This method overload accepts a single integer argument
+}
+```
 
-// Using ref requires that the variables be initialized first
-sValue = "";
-ReturnMultiRef(ref first, ref sValue);
-Console.WriteLine("{0}, {1}", first.ToString(), sValue);
+--
 
- static void ReturnMultiRef(ref int i, ref string s)
- {
-        i = 50;
-        s = "using ref";
- }
+###Optional Parameters
+Note that the mechanism used to denote an optional parameter is the inclusion if a default value.
+
+
+```c#
+void StopService(bool forceStop, string serviceName = null, int serviceId =1)
+{
+   // code here that will stop the service
+}
+```
+
+###Named Parameters
+The following code example shows how to invoke the StopService method by using named arguments to pass the serviceID parameter.
+```c#
+StopService(true, serviceID: 1);
+```
+--
+
+
+
