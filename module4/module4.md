@@ -33,4 +33,35 @@ for (int i = 0; i < oldNumbers.Length; i++)
     ...
 }
 ```
+--
+##Multidimensional arrays
+You declare a multidimensional array variable just as you declare a single-dimensional array, but you separate the dimensions by using commas.
+```c#
+// Create an array that is 10 long(rows) by 10 wide(columns)
+int[ , ] arrayName = new int[10,10];
 
+//Access the element in the first row and second column
+int value2 = arrayName[0, 1];
+```
+###Jagged arrays
+A jagged array is simply an array of arrays, and the size of each array can vary. Jagged arrays are useful for modeling sparse data structures where you might not always want to allocate memory for every item if it is not going to be used. The following code example shows how to declare and initialize a jagged array. Note that you must specify the size of the first array, but you must not specify the size of the arrays that are contained within this array. You allocate memory to each array within a jagged array separately, by using the new keyword.
+```c#
+int[][] jaggedArray = new int[10][];
+jaggedArray[0] = new Type[5]; // Can specify different sizes.
+jaggedArray[1] = new Type[7];
+...
+jaggedArray[9] = new Type[21];
+```
+###Access multidimensional arrays
+```c#
+int[,] twoDArray = {{3,2},{1,2},{5,9}}
+for (int i = 0, i < twoDArray.Getlength(0); i++{
+    for (int j = 0, j < twoDArray.Getlength(0); j++{
+        int value = twoDArray[0, 1];
+        Console.WriteLine(value.ToString());
+    }
+}
+```
+
+--
+#Introducing enums
