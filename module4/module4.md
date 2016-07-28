@@ -65,3 +65,50 @@ for (int i = 0, i < twoDArray.Getlength(0); i++{
 
 --
 #Introducing enums
+An enumeration type, or enum, is a structure that enables you to create a variable with a fixed set of possible values.
+A best practice would be to define your enum directly within a namespace so that all classes in that namespace will have access to it, if needed. You can also nest your enums within classes or structs.
+By default enum values start at 0 and each successive member is increased by a value of 1.
+
+###Creating and Using Enums
+```c#
+enum Day { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday };
+```
+By default enum values start at 0 and each successive member is increased by a value of 1.  As a result, the previous enum 'Day' would contain the values:
+
+Sunday = 0
+Monday = 1
+Tuesday = 2
+etc.
+
+You can change the default by specifying a starting value for your enum as in the following example.
+```c#
+enum Day { Sunday = 1, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday };
+```
+In this example, Sunday is given the value 1 instead of the detaul 0.  Now Monday is 2, Tuesday is 3, etc.
+In order to change the default data type of your enum, you precede the list with a data type from the list above, such as:
+```c#
+enum Day : short { Sunday = 1, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday };
+```
+It's important to note that you will be required to use an explicit cast if you want to convert from an enum type to an integral type. Consider this example where the statement assigns the enumerator Sun to an int type, with a cast, to convert from enum to int.
+```c#
+int x = (int)Day.Sun;
+```
+###Using an Enum
+Declaration of a Enum must be outside of any method, for example in the class definition.
+```c#
+Day favoriteDay = Day.Friday;
+```
+###Using Enum Names and Values Interchangeably
+
+```c#
+// Set an enum variable by name.
+Day favoriteDay = Day.Friday;
+// Set an enum variable by value. 
+Day favoriteDay = (Day)4;
+```
+
+
+
+```c#
+
+```
