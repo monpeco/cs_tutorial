@@ -105,10 +105,164 @@ Day favoriteDay = Day.Friday;
 Day favoriteDay = Day.Friday;
 // Set an enum variable by value. 
 Day favoriteDay = (Day)4;
-```
+```--
 
-
+#Introducing structs
+###Creating a Struct
 
 ```c#
+//Declaring a Struct 
+public struct Coffee 
+{ 
+    public int Strength; 
+    public string Bean; 
+    public string CountryOfOrigin; 
+    // Other methods, fields, properties, and events. 
+}
+```
+* Access Modifier Details
+public - The type is available to code running in any assembly.
+internal - The type is available to any code within the same assembly, but not available to code in another assembly. This is the default value if you do not specify an access modifier.
+private - The type is only available to code within the struct that contains it. You can only use the private access modifier with nested structs.
+
+###Using a Struct
+* Instantiating a Struct
+
+```c#
+Coffee coffee1 = new Coffee();
+coffee1.Strength = 3;
+coffee1.Bean = "Arabica";
+coffee1.CountryOfOrigin = "Kenya";
+```
+
+###Adding a Constructor
+```c#
+public struct Coffee
+{
+   // This is the custom constructor.
+   public Coffee(int strength, string bean, string countryOfOrigin)
+   {
+      this.Strength = strength;
+      this.Bean = bean;
+      this.CountryOfOrigin = countryOfOrigin;
+   }
+  // These statements declare the struct fields and set the default values.
+   public int Strength;
+   public string Bean;
+   public string CountryOfOrigin; 
+   // Other methods, fields, properties, and events.
+}
 
 ```
+###Calling a Constructor
+```c#
+// Call the custom constructor by providing arguments for the three required parameters.
+Coffee coffee1 = new Coffee(4, "Arabica", "Colombia");
+```
+###Creating Properties
+```c#
+//Implementing a Property 
+public struct Coffee 
+{ 
+    private int strength; 
+    public int Strength 
+    { 
+        get { return strength; } 
+        set { strength = value; } 
+    } 
+}
+```
+The following example shows how to use a property:
+```c#
+//Using a Property 
+Coffee coffee1 = new Coffee(); 
+// The following code invokes the set accessor. coffee1.Strength = 3; 
+// The following code invokes the get accessor. int coffeeStrength = coffee1.Strength;
+```
+
+```c#
+// This is a read-only property. 
+public int Strength 
+{ 
+    get { return strength; } 
+} 
+// This is a write-only property. 
+public string Bean 
+{ 
+    set { bean = value; } 
+} 
+```
+You can change the implementation of properties without affecting client code. For example, you can add validation logic, or call a method instead of reading a field value.
+```c#
+public int Strength 
+{ 
+    get { return strength; } 
+    set 
+    { 
+        if(value < 1) 
+        { strength = 1; } 
+        else if(value > 5) 
+        { strength = 5; } 
+        else { strength = value; } 
+      } 
+}
+```
+* Properties are required for data binding in WPF. For example, you can bind controls to property values, but you cannot bind controls to field values.
+
+When you want to create a property that simply gets and sets the value of a private field without performing any additional logic, you can use an abbreviated syntax. 
+```c#
+public int Strength { get; set; }
+public int Strength { get; } //To create a property that reads from a private field
+public int Strength { set; } //To create a property that writes to a private field
+```
+In each case, the compiler will implicitly create a private field and map it to your property. These are known as auto-implemented properties. You can change the implementation of your property at any time.
+
+###Creating Indexers
+The following example shows a struct that includes an array:
+```c#
+//Creating a Struct that Includes an Array 
+public struct Menu 
+{ 
+    public string[] beverages; 
+    public Menu(string bev1, string bev2) 
+    { 
+        beverages = new string[] { "Americano", "Café au Lait", "Café Macchiato", "Cappuccino", "Espresso" }; 
+    }
+}
+```
+When you expose the array as a public field, you would use the following syntax to retrieve beverages from the list:
+```c#
+//Accessing Array Items Directly 
+Menu myMenu = new Menu(); 
+string firstDrink = myMenu.beverages[0];
+```
+A more intuitive approach would be if you could access the first item from the menu by using the syntax myMenu[0]. You can do this by creating an indexer. An indexer is similar to a property, in that it uses get and set accessors to control access to a field. More importantly, an indexer enables you to access collection members directly from the name of the containing struct or class by providing an integer index value. To declare an indexer, you use the this keyword, which indicates that the property will be accessed by using the name of the struct instance.
+
+The following example shows how to define an indexer for a struct:
+
+```c#
+//Creating an Indexer 
+public struct Menu 
+{ 
+    private string[] beverages; 
+    // This is the indexer. 
+    public string this[int index] 
+    { 
+        get { return this.beverages[index]; } 
+        set { this.beverages[index] = value; } 
+    } 
+    // Enable client code to determine the size of the collection. 
+    public int Length 
+    { 
+        get { return beverages.Length; } 
+    } 
+}
+```
+When you use an indexer to expose the array, you use the following syntax to retrieve the beverages from the list:
+```c#
+//Accessing Array Items by Using an Indexer 
+Menu myMenu = new Menu(); 
+string firstDrink = myMenu[0]; 
+int numberOfChoices = myMenu.Length;
+```
+Just like a property, you can customize the get and set accessors in an indexer without affecting client code. You can create a read-only indexer by including only a get accessor, and you can create a write-only indexer by including only a set accessor.
