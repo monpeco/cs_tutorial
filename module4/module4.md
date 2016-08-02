@@ -105,7 +105,7 @@ Day favoriteDay = Day.Friday;
 Day favoriteDay = Day.Friday;
 // Set an enum variable by value. 
 Day favoriteDay = (Day)4;
-```--
+```
 
 #Introducing structs
 ###Creating a Struct
