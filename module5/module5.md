@@ -253,10 +253,100 @@ var dm2 = new DrinksMachine("Fourth Coffee", "BeanCrusher 3000");
 var dm3 = new DrinksMachine(3, "Fourth Coffee", "BeanToaster Turbo");
 ```
 
+#Creating Static Classes and Members
+A static class is a class that cannot be instantiated. To create a static class, you use the static keyword. Any members within the class must also use the static keyword, as shown in the following example:
+
 ```c#
+// Static Classes
+public static class Conversions
+{
+   public static double PoundsToKilos(double pounds)
+   {
+      // Convert argument from pounds to kilograms
+      double kilos = pounds * 0.4536;
+      return kilos;
+   }
+   public static double KilosToPounds(double kilos)
+   {
+      // Convert argument from kilograms to pounds
+      double pounds = kilos * 2.205;
+      return pounds;
+   }
+}
+```
+To call a method on a static class, you call the method on the class name itself instead of on an instance name, as shown by the following example:
+
+
+```c#
+//Calling Methods on a Static Class
+double weightInKilos = 80;
+double weightInPounds = Conversions.KilosToPounds(weightInKilos);
+```
+###Static Members
+Non-static classes can include static members. This is useful when some behaviors and characteristics relate to the instance (instance members), while some behaviors and characteristics relate to the type itself (static members).
+To declare a static member you use the static keyword before the return type of the member, as shown by the following example:
+
+
+```c#
+// Static Members in Non-static Classes
+public class DrinksMachine
+{
+   public int Age { get; set; }
+   public string Make { get; set; }
+   public string Model { get; set; }
+   public static int CountDrinksMachines()
+   {
+      // Add method logic here.
+   }
+}
+```
+###Anonymous classes
+To create an anonymous class. you simply use the new keyword followed by a pair of braces to define fields and values for the class.  The following is an example:
+
+```c#
+anAnonymousObject = new { Name = "Tom", Age = 65 };
+```
+Because our anonymous class doesn't have a name,  how can you create an object of that type and assign an instance of the class to it? In the preceding code example, what should the type of the object variable anAnonymousObject be?  As a result of the way anonymous classes work, you don’t know, which is precisely the point of anonymous classes.
+
+This doesn't truly present a problem however, as long as you declare anAnonymousObject as an implicitly typed variable by using the var keyword as shown here:
+
+```c#
+var anAnonymousObject = new { Name = "Tom", Age = 65 };
+```
+Once instantiated, you can access the fields in the object by using dot notation, as shown in this example:
+
+```c#
+Console.WriteLine("Name: {0} Age: {1}", anAnonymousObject.Name, anAnonymousObject.Age};
+```
+Once created, you have the option to create other instances of the same anonymous class but with different values:
+
+```c#
+var secondAnonymousObject = new { Name = "Hal", Age = 46 };
+```
+The C# compiler will look at the names, types, number, and the order of the fields in the object in order to determine whether two instances of an anonymous class have the same type or not.  In our two examples, both objects contain the same number of fields, the same name and the same type, in the same order.  As a result, both variables are instances of the same anonymous class. This means that you can assign anAnonymousObject to the secondAnonymousObject or vice versa:
+
+
+```c#
+secondAnonymousObject = anAnonymousObject;
+```
+Note:  There are quite a few restrictions on the contents of an anonymous class:
+* anonymous classes can contain only public fields
+* the fields must all be initialized
+* fields cannot be static
+* you cannot define any methods for them
+
+###Region
+lets you specify a block of code that you can expand or collapse when using the outlining feature of the Visual Studio Code Editor.
+
+```c#
+      #region MyClass definition
+public class MyClass 
+{  
+    static void Main() 
+    {
+    }
+}
+#endregion
 
 ```
 
-```c#
-
-```
