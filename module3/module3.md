@@ -112,6 +112,82 @@ The following code example shows how to invoke the StopService method by using n
 StopService(true, serviceID: 1);
 ```
 --
+###Exceptions
+The .NET Framework uses exceptions to help overcome these issues. An exception is an indication of an error or exceptional condition. A method can throw an exception when it detects that something unexpected has happened, for example, the application tries to open a file that does not exist.
+--
+###Propagation
+When a method throws an exception, the calling code must be prepared to detect and handle this exception. If the calling code does not detect the exception, the code is aborted and the exception is automatically propagated to the code that invoked the calling code. This process continues until a section of code takes responsibility for handling the exception
+--
+###Handling Exceptions
+The recommended strategy to follow with catch blocks is to catch more specific exceptions first, and more general exceptions last.
+```c#
+try
+{
+    // Try block.
+}
+catch (FileNotFoundException fnfEx)
+{
+    // Catch block 1.
+}
+catch (Exception e)
+{
+    // Catch block n.
+}
+```
+--
+###Using Finally
+Some methods may contain critical code that must always be run, even if an unhandled exception occurs. For example, a method may need to ensure that it closes a file that it was writing to or releases some other resources before it terminates. A finally block enables you to handle this situation.
 
+You specify a finally block after any catch handlers in a try/catch block. It specifies code that must be performed when the block finishes, irrespective of whether any exceptions, handled or unhandled, occur.
 
+You can also add a finally block to code that has no catch blocks. In this case, all exceptions are unhandled, but the finally block will always run.
+```c#
+try
+{
+}
+catch (NullReferenceException ex)
+{
+    // Catch all NullReferenceException exceptions.
+}
+catch (Exception ex)
+{
+    // Catch all other exceptions.
+}
+finally
+{
+   // Code that always runs to close files or release resources.
+}
+```
+--
+###Throwing Exceptions
+The following code example shows how to create an instance of the NullReferenceException class and then throw the ex object.
+
+```c#
+var ex = new NullReferenceException("The 'Name' parameter is null.");
+throw ex;
+```
+A common strategy is for a method or block of code to catch any exceptions and attempt to handle them. If the catch block for an exception cannot resolve the error, it can rethrow the exception to propagate it to the caller.
+
+The following code example shows how to rethrow an exception that has been caught in a catch block.
+```c#
+try
+{
+}
+catch (NullReferenceException ex)
+{
+    // Catch all NullReferenceException exceptions.
+}
+catch (Exception ex)
+{
+    // Attempt to handle the exception
+    ...
+    // If this catch handler cannot resolve the exception, 
+    // throw it to the calling code
+    throw;
+}
+```
+
+###
+```c#
+```
 
