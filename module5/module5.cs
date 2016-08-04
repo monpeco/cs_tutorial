@@ -1,4 +1,4 @@
-    using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,142 +6,148 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication5
 {
-
-//Declaring Class Student
-public class Student
-{
-    // constructor
-    Student(string firstName, string lastName, string birthdate)
+    //Declaring Class Student
+    public class Teacher
     {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthdate = birthdate;
+
+
+ 
+
+
+        // constructor
+        Teacher(string firstName, string lastName, string birthdate)
+        {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.birthdate = birthdate;
+        }
+
+        // Properties
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string birthdate { get; set; }
+
     }
-    // fields
-    private string _firstName;
-    private string _lastName;
-    private string _birthdate;
-    
-    // property with a private field
-    public string firstName
+
+    //Declaring Class Student
+    public class Student
     {
-        get
+        // constructor
+        public Student(string firstName, string lastName, string birthdate)
         {
-            return _firstName;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.birthdate = birthdate;
+            studensNumber++;
         }
-        set
+        //static fields
+        static int studensNumber = 0;
+        // fields
+        private string _firstName;
+        private string _lastName;
+        private string _birthdate;
+
+        // property with a private field
+        public string firstName
         {
-            if (value != null) 
-            _firstName = value;
+            get
+            {
+                return _firstName;
+            }
+            set
+            {
+                if (value != null)
+                    _firstName = value;
+            }
         }
+
+        public string lastName
+        {
+            get
+            {
+                return _lastName;
+            }
+            set
+            {
+                if (value != null)
+                    _lastName = value;
+            }
+        }
+
+        public string birthdate
+        {
+            get
+            {
+                return _birthdate;
+            }
+            set
+            {
+                if (value != null)
+                    _birthdate = value;
+            }
+        }
+
     }
-    
-    public string lastName
-    {
-        get
-        {
-            return _lastName;
-        }
-        set
-        {
-            if (value != null) 
-            _lastName = value;
-        }
-    }   
 
-    public string birthdate
+    //Declaring Course Class
+    public class Course
     {
-        get
+        public Course()
         {
-            return _birthdate;
-        }
-        set
-        {
-            if (value != null) 
-            _birthdate = value;
-        }
-    }    
-    
-}
 
-
-//Declaring Class Student
-public class Teacher
-{
-    // constructor
-    Teacher(string firstName, string lastName, string birthdate)
-    {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthdate = birthdate;
+        }
+        Student[] arrayStudent = new Student[3];
+        Teacher[] arrayTeacher = new Teacher[3];
+        public string name { get; set; }
+        public string lastName { get; set; }
+        public string birthdate { get; set; }
     }
-    
-    // Properties
-    public string firstName {get; set;}
-    public string lastName {get; set;}
-    public string birthdate {get; set;}
-    
-}
 
-
-//Declaring Class Student
-public class UProgram 
-{
-    // constructor
-    UProgram (string name, string department, string degrees)
+    //Declaring Class Student
+    public class Degree
     {
-        this.name = name;
-        this.department = department;
-        this.degrees = degrees;
+        // constructor
+        Degree(string name, string credits)
+        {
+            this.name = name;
+            this.credits = credits;
+        }
+
+        // Properties
+        public string name { get; set; }
+        public string credits { get; set; }
+        //public Course course {get; set;}
+        //public Course course ;
+
     }
-    
-    // Properties
-    public string name {get; set;}
-    public string department {get; set;}
-    public string degrees {get; set;}
-    public Degree degrees {get; set;}
-    
-}
 
-
-
-//Declaring Class Student
-public class Degree  
-{
-    // constructor
-    Degree  (string name, string credits)
+    //Declaring Class Student
+    public class UProgram
     {
-        this.name = name;
-        this.credits = credits;
+        // constructor
+        UProgram(string name, string department, Degree degrees)
+        {
+            this.name = name;
+            this.department = department;
+            this.degrees = degrees;
+        }
+
+        // Properties
+        public string name { get; set; }
+        public string department { get; set; }
+        //public string degrees { get; set; }
+        public Degree degrees { get; set; }
+
     }
-    
-    // Properties
-    public string name {get; set;}
-    public string credits {get; set;}
-    //public Course course {get; set;}
-    //public Course course ;
 
-}
-
-//Declaring Course Class
-public class Course
-{
-    Student[] arrayStudent = new Student[3];
-    Teacher[] arrayTeacher = new Teacher[3];
-    
-}
-
-
-
-
-
-
-class Program
+    class Program
     {
-
         static void Main(string[] args)
         {
 
+            Student joe = new Student("Joe", "Smith", "04/03/1950");
+            Student bob = new Student("Bob", "Sanders", "01/08/1960");
+            Student sam = new Student("Sam", "Peterson", "02/02/1970");
             Console.WriteLine("\n\nEnd of the program");
             Console.ReadLine();
         }
