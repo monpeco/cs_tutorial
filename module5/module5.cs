@@ -6,22 +6,18 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication5
 {
+
     //Declaring Class Student
     public class Teacher
     {
-
-
- 
-
-
         // constructor
-        Teacher(string firstName, string lastName, string birthdate)
+        public Teacher(string firstName, string lastName, string birthdate)
         {
             this.firstName = firstName;
             this.lastName = lastName;
             this.birthdate = birthdate;
+            //Console.WriteLine("\nfirstName: {0},\nlastName: {1}, \nbirthdate: {2}", this.firstName, this.lastName, this.birthdate);
         }
-
         // Properties
         public string firstName { get; set; }
         public string lastName { get; set; }
@@ -39,9 +35,11 @@ namespace ConsoleApplication5
             this.lastName = lastName;
             this.birthdate = birthdate;
             studensNumber++;
+            //Console.WriteLine("\nfirstName: {0},\nlastName: {1}, \nbirthdate: {2}", this.firstName, this.lastName, this.birthdate);
+
         }
         //static fields
-        static int studensNumber = 0;
+        public static int studensNumber = 0;
         // fields
         private string _firstName;
         private string _lastName;
@@ -92,52 +90,63 @@ namespace ConsoleApplication5
     //Declaring Course Class
     public class Course
     {
-        public Course()
+        public Course(string name)
         {
+            this.name = name;
+        }
 
+        public  Student this[int index]
+        {
+            get { return this.arrayStudent[index]; }
+            set { this.arrayStudent[index] = value; }
+        }
+        public Teacher this[int index,int i]
+        {
+            get { return this.arrayTeacher[index]; }
+            set { this.arrayTeacher[index] = value; }
         }
         Student[] arrayStudent = new Student[3];
         Teacher[] arrayTeacher = new Teacher[3];
         public string name { get; set; }
-        public string lastName { get; set; }
-        public string birthdate { get; set; }
+        public string duration { get; set; }
+        public string teacher { get; set; }
+        public Degree degree { get; set; }
+        public UProgram uProgram { get; set; }
     }
 
     //Declaring Class Student
     public class Degree
     {
         // constructor
-        Degree(string name, string credits)
+        public Degree(string name, string credits)
         {
             this.name = name;
             this.credits = credits;
+            //Console.WriteLine("\name: {0},\ncredits: {1}", this.name, this.credits);
         }
 
         // Properties
         public string name { get; set; }
         public string credits { get; set; }
-        //public Course course {get; set;}
-        //public Course course ;
-
     }
 
     //Declaring Class Student
     public class UProgram
     {
         // constructor
-        UProgram(string name, string department, Degree degrees)
+        public UProgram(string name, string department, Degree degree)
         {
             this.name = name;
             this.department = department;
-            this.degrees = degrees;
+            this.degree = degree;
+            //Console.WriteLine("\name: {0},\ndepartment: {1},\ndepartment: {2}", this.name, this.department, this.degree);
+
         }
 
         // Properties
         public string name { get; set; }
         public string department { get; set; }
-        //public string degrees { get; set; }
-        public Degree degrees { get; set; }
-
+        public Degree degree { get; set; }
     }
 
     class Program
@@ -148,6 +157,22 @@ namespace ConsoleApplication5
             Student joe = new Student("Joe", "Smith", "04/03/1950");
             Student bob = new Student("Bob", "Sanders", "01/08/1960");
             Student sam = new Student("Sam", "Peterson", "02/02/1970");
+
+            Course cSharp = new Course("Programming with C#");
+            cSharp[0] = joe;
+            cSharp[1] = bob;
+            cSharp[2] = sam;
+            cSharp[0, 0] = new Teacher("Jim", "Street", "12/05/1950");
+            cSharp.degree = new Degree("Bachelor", "58");
+            cSharp.uProgram = new UProgram("Information Technology", "CS", cSharp.degree);
+
+            Console.WriteLine("\nInformation required for the Assignment");
+            Console.WriteLine("The {0} Program contains the {1} degree", cSharp.uProgram.name, cSharp.degree.name);
+            Console.WriteLine("The {0} degree contains the course {1}", cSharp.degree.name, cSharp.name);
+            Console.WriteLine("The {0} course contains {1} students", cSharp.name, Student.studensNumber);
+
+
+
             Console.WriteLine("\n\nEnd of the program");
             Console.ReadLine();
         }
