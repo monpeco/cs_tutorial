@@ -162,4 +162,4 @@ empID: 023
 Name: Fred
 Department: Accounting
 
-The lambda expression in the above code is ```c#(Employee p) => { return p.empID == 023; }.```
+The lambda expression in the above code is ```(Employee p) => { return p.empID == 023; }.```
