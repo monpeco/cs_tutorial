@@ -109,8 +109,8 @@ public class CustomList<T> where T : IBeverage
 
 | Constraint | Description |
 | --- | --- |
-| where T : <name of interface>  | The type argument must be, or implement, the specified interface.  |
-|  where T : <name of base class> | The type argument must be, or derive from, the specified class  |
+| where T : &lt;name of interface&gt;  | The type argument must be, or implement, the specified interface.  |
+|  where T : &lt;name of base class&gt; | The type argument must be, or derive from, the specified class  |
 |  where T : U |  The type argument must be, or derive from, the supplied type argument U |
 |  where T : new()	 | The type argument must have a public default constructor  |
 | where T : struct  | The type argument must be a value type  |
