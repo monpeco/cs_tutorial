@@ -175,7 +175,7 @@ Dictionary classes store collections of key value pairs. The value is the object
 **The Dictionary<TKey, TValue> class** provides a general purpose, strongly typed dictionary class. You can add duplicate values to the collection, but the keys must be unique. The class will throw an ArgumentException if you attempt to add a key that already exists in the dictionary.
 
 The following example shows how to use the Dictionary<TKey, TValue> class:
-```
+```C#
 // Using the Dictionary<TKey, TValue> Class
 // Create a new dictionary of strings with string keys.
 var coffeeCodes = new Dictionary<String, String>();
@@ -241,3 +241,34 @@ catch (KeyNotFoundException)
 
 * **The SortedList generic class** uses less memory than the SortedDictionary generic class.
 * **The SortedDictionary class** is faster and more efficient at inserting and removing unsorted data.
+
+#Using Collection Interfaces
+
+| Name | Description |
+| --- | --- |
+| Insert | Inserts an item into the collection at the specified index. |
+| RemoveAt | Removes the item at the specified index from the collection. |
+
+
+
+| Name | Description |
+| --- | --- |
+|IndexOf | Determines the position of a specified item in the collection. |
+
+
+
+| Name | Description |
+| --- | --- |
+|Add | Adds an item with the specified key and value to the collection. |
+|ContainsKey | Indicates whether the collection includes a key-value pair with the specified key. |
+|GetEnumerator | Returns an enumerator of KeyValuePair<TKey, TValue> objects. |
+|Remove | Removes the item with the specified key from the collection. |
+|TryGetValue | Attempts to set the value of an output parameter to the value associated with a specified key. If the key exists, the method returns true. If the key does not exist, the method returns false and the output parameter is unchanged. |
+
+
+
+| Name | Description |
+| --- | --- |
+|Item | Gets or sets the value of an item in the collection, based on a specified key. This property enables you to use indexer notation, for example myDictionary[myKey] = myValue. |
+|Keys | Returns the keys in the collection as an ICollection<T> instance. |
+|Values | Returns the values in the collection as an ICollection<T> instance. |
