@@ -315,12 +315,14 @@ To enumerate over a collection, you typically use a foreach loop. The foreach lo
 The IEnumerator&lt;T&gt; interface defines the functionality that all enumerators must implement. 
 
 The IEnumerator&lt;T&gt; interface defines the following methods:
+
 | Name | Description |
 | --- | --- |
 | MoveNext | Advanced the enumerator to the next item in the collection. |
 | Reset | Sets the enumerator to its starting position, which is before the first item in the collection. |
 
 The IEnumerator&lt;T&gt; interface defines the following properties:
+
 |  Name  |  Description  |
 |   ---  |  ---  |
 |  Current  |  Gets the item that the enumerator is pointing to.  |
