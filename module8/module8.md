@@ -82,6 +82,7 @@ Casting is a computationally expensive process. When you add items to an ArrayLi
 If you want to store value types in an ArrayList, the items must be boxed when they are added to the collection and unboxed when they are retrieved. Boxing and unboxing incurs a large computational cost and can significantly slow your applications, especially when you iterate over large collections. By contrast, you can add value types to generic lists without boxing and unboxing the value.
 The following example shows the difference between generic and non-generic collections with regard to boxing and unboxing:
 
+```c#
 // Boxing and Unboxing: Generic vs. Non-Generic Collections
 int number1 = 1;
 var arrayList1 = new ArrayList();
@@ -94,7 +95,7 @@ var genericList1 = new List<Int32>();
 genericList1.Add(number1);
 //This statement retrieves the Int32 value without unboxing.
 int number3 = genericList1[0];
-
+```
 
 ###Constraining Generics
 In some cases, you may need to restrict the types that developers can supply as arguments when they instantiate your generic class. The nature of these constraints will depend on the logic you implement in your generic class. 
@@ -175,6 +176,7 @@ Dictionary classes store collections of key value pairs. The value is the object
 **The Dictionary&lt;TKey, TValue&gt; class** provides a general purpose, strongly typed dictionary class. You can add duplicate values to the collection, but the keys must be unique. The class will throw an ArgumentException if you attempt to add a key that already exists in the dictionary.
 
 The following example shows how to use the Dictionary&lt;TKey, TValue&gt; class:
+
 ```C#
 // Using the Dictionary<TKey, TValue> Class
 // Create a new dictionary of strings with string keys.
@@ -246,15 +248,15 @@ catch (KeyNotFoundException)
 #Using Collection Interfaces
 There will be circumstances when you will want to create your own generic collection classes in order to provide more specialized functionality
 
-###The IEnumerable and IEnumerable<T> Interfaces
+###The IEnumerable and IEnumerable&lt;T&gt; Interfaces
 
-If you want to be able to use a foreach loop to enumerate over the items in your custom generic collection, you must implement the IEnumerable<T> interface. The IEnumerable<T> interface defines a single method named GetEnumerator(). This method must return an object of type IEnumerator<T>.
+If you want to be able to use a foreach loop to enumerate over the items in your custom generic collection, you must implement the IEnumerable&lt;T&gt; interface. The IEnumerable&lt;T&gt; interface defines a single method named GetEnumerator(). This method must return an object of type IEnumerator&lt;T&gt;.
 
-###The ICollection<T> Interface
+###The ICollection&lt;T&gt; Interface
 
-The ICollection<T> interface defines the basic functionality that is common to all generic collections. The interface inherits from IEnumerable<T>, which means that if you want to implement ICollection<T>, you must also implement the members defined by IEnumerable<T> and IEnumerable.
+The ICollection&lt;T&gt; interface defines the basic functionality that is common to all generic collections. The interface inherits from IEnumerable&lt;T&gt;, which means that if you want to implement ICollection&lt;T&gt;, you must also implement the members defined by IEnumerable&lt;T&gt; and IEnumerable.
 
-The ICollection<T> interface defines the following methods:
+The ICollection&lt;T&gt; interface defines the following methods:
 
 |Name	|Description|
 |-------|-------|
@@ -264,32 +266,32 @@ The ICollection<T> interface defines the following methods:
 |CopyTo	|Copies the items in the collection to an array.|
 |Remove	|Removes a specific object from the collection.|
 
-The ICollection<T> interface defines the following properties:
+The ICollection&lt;T&gt; interface defines the following properties:
 
 |Name	|Description|
 |-------|-------|
 |Count	|Gets the number of items in the collection.|
 |IsReadOnly	|Indicates whether the collection is read-only.|
 
-###The IList<T> Interface
-The IList<T> interface defines the core functionality for generic list classes. You should implement this interface if you are defining a linear collection of single values. In addition to the members it inherits from ICollection<T>, the IList<T> interface defines methods and properties that enable you to use indexers to work with the items in the collection. For example, if you create a list named myList, you can use myList[0] to access the first item in the collection.
+###The IList&lt;T&gt; Interface
+The IList&lt;T&gt; interface defines the core functionality for generic list classes. You should implement this interface if you are defining a linear collection of single values. In addition to the members it inherits from ICollection&lt;T&gt;, the IList&lt;T&gt; interface defines methods and properties that enable you to use indexers to work with the items in the collection. For example, if you create a list named myList, you can use myList[0] to access the first item in the collection.
 
-The IList<T> interface defines the following methods:
+The IList&lt;T&gt; interface defines the following methods:
 
 | Name | Description |
 | --- | --- |
 | Insert | Inserts an item into the collection at the specified index. |
 | RemoveAt | Removes the item at the specified index from the collection. |
 
-The IList<T> interface defines the following properties:
+The IList&lt;T&gt; interface defines the following properties:
 
 | Name | Description |
 | --- | --- |
 |IndexOf | Determines the position of a specified item in the collection. |
 
-###The IDictionary<TKey, TValue> Interface
-The IDictionary<TKey, TValue> interface defines the core functionality for generic dictionary classes. You should implement this interface if you are defining a collection of key-value pairs. In addition to the members it inherits from ICollection<T>, the IDictionary<T> interface defines methods and properties that are specific to working with key-value pairs.
-The IDictionary<TKey, TValue> interface defines the following methods:
+###The IDictionary&lt;TKey, TValue&gt; Interface
+The IDictionary&lt;TKey, TValue&gt; interface defines the core functionality for generic dictionary classes. You should implement this interface if you are defining a collection of key-value pairs. In addition to the members it inherits from ICollection&lt;T&gt;, the IDictionary&lt;T&gt; interface defines methods and properties that are specific to working with key-value pairs.
+The IDictionary&lt;TKey, TValue&gt; interface defines the following methods:
 | Name | Description |
 | --- | --- |
 |Add | Adds an item with the specified key and value to the collection. |
@@ -298,7 +300,7 @@ The IDictionary<TKey, TValue> interface defines the following methods:
 |Remove | Removes the item with the specified key from the collection. |
 |TryGetValue | Attempts to set the value of an output parameter to the value associated with a specified key. If the key exists, the method returns true. If the key does not exist, the method returns false and the output parameter is unchanged. |
 
-The IDictionary<TKey, TValue> interface defines the following properties:
+The IDictionary&lt;TKey, TValue&gt; interface defines the following properties:
 
 | Name | Description |
 | --- | --- |
@@ -307,18 +309,18 @@ The IDictionary<TKey, TValue> interface defines the following properties:
 |Values | Returns the values in the collection as an ICollection&lt;T&gt; instance. |
 
 ###Creating Enumerable Collections
-To enumerate over a collection, you typically use a foreach loop. The foreach loop exposes each item in the collection in turn, in an order that is appropriate to the collection. The foreach statement masks some of the complexities of enumeration. For the foreach statement to work, a generic collection class must implement the IEnumerable<T> interface. This interface exposes a method, GetEnumerator, which must return an IEnumerator<T> type. 
+To enumerate over a collection, you typically use a foreach loop. The foreach loop exposes each item in the collection in turn, in an order that is appropriate to the collection. The foreach statement masks some of the complexities of enumeration. For the foreach statement to work, a generic collection class must implement the IEnumerable&lt;T&gt; interface. This interface exposes a method, GetEnumerator, which must return an IEnumerator&lt;T&gt; type. 
 
-###The IEnumerator<T> Interface
-The IEnumerator<T> interface defines the functionality that all enumerators must implement. 
+###The IEnumerator&lt;T&gt; Interface
+The IEnumerator&lt;T&gt; interface defines the functionality that all enumerators must implement. 
 
-The IEnumerator<T> interface defines the following methods:
+The IEnumerator&lt;T&gt; interface defines the following methods:
 |Name	|Description|
 | --- | --- |
 |MoveNext	|Advanced the enumerator to the next item in the collection.|
 |Reset	|Sets the enumerator to its starting position, which is before the first item in the collection.|
 
-The IEnumerator<T> interface defines the following properties:
+The IEnumerator&lt;T&gt; interface defines the following properties:
 |Name	|Description|
 | --- | --- |
 |Current	|Gets the item that the enumerator is pointing to.|
@@ -328,8 +330,8 @@ When you create an enumerator, you must define:
 * Which item the enumerator should treat as the first item in the collection.
 * In what order the enumerator should move through the items in the collection.
 
-###The IEnumerable<T> Interface
-The IEnumerable<T> interface defines a single method named GetEnumerator. This returns an IEnumerator<T> instance.
+###The IEnumerable&lt;T&gt; Interface
+The IEnumerable&lt;T&gt; interface defines a single method named GetEnumerator. This returns an IEnumerator&lt;T&gt; instance.
 The GetEnumerator method returns the default enumerator for your collection class. This is the enumerator that a foreach loop will use, unless you specify an alternative. However, you can create additional methods to expose alternative enumerators.
 The following example shows a custom collection class that implements a default enumerator, together with an alternative enumerator that enumerates the collection in reverse order:
 ```c#
@@ -375,7 +377,7 @@ foreach(int number in numbers.Backwards())
 }
 ```
 ###Implementing the Enumerator
-You can provide an enumerator by creating a custom class that implements the IEnumerator<T> interface. However, if your custom collection class uses an underlying enumerable type to store data, you can use an iterator to implement the IEnumerable<T> interface without actually providing an IEnumerator<T> implementation. The best way to understand iterators is to start with a simple example.
+You can provide an enumerator by creating a custom class that implements the IEnumerator&lt;T&gt; interface. However, if your custom collection class uses an underlying enumerable type to store data, you can use an iterator to implement the IEnumerable&lt;T&gt; interface without actually providing an IEnumerator&lt;T&gt; implementation. The best way to understand iterators is to start with a simple example.
 
 The following example shows how you can use an iterator to implement an enumerator:
 
@@ -405,4 +407,4 @@ class BasicCollection<T> : IEnumerable<T>
     }
 }
 ```
-The example shows a custom generic collection class that uses a List<T> instance to store data. The List<T> instance is populated by the FillList method. When the GetEnumerator method is called, a foreach loop enumerates the underlying collection. Within the foreach loop, a yield return statement is used to return each item in the collection. It is this yield return statement that defines the iterator—essentially, the yield return statement pauses execution to return the current item to the caller before the next element in the sequence is retrieved. In this way, although the GetEnumerator method does not appear to return an IEnumerator type, the compiler is able to build an enumerator from the iteration logic that you provided.
+The example shows a custom generic collection class that uses a List&lt;T&gt; instance to store data. The List&lt;T&gt; instance is populated by the FillList method. When the GetEnumerator method is called, a foreach loop enumerates the underlying collection. Within the foreach loop, a yield return statement is used to return each item in the collection. It is this yield return statement that defines the iterator—essentially, the yield return statement pauses execution to return the current item to the caller before the next element in the sequence is retrieved. In this way, although the GetEnumerator method does not appear to return an IEnumerator type, the compiler is able to build an enumerator from the iteration logic that you provided.
