@@ -1,6 +1,6 @@
 using System;
-//using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,7 +36,7 @@ namespace ConsoleApplication8
         }
         public string testName { get; set; }
         public static int studensNumber = 0;
-        public Stack Grades = new Stack();
+        public Stack<int> Grades = new Stack<int>();  //3) Create a Stack<T> object, inside the Student object, called Grades, to store test scores.
     }
 
     public class Teacher : Person
@@ -90,17 +90,27 @@ namespace ConsoleApplication8
             this.name = name;
         }
 
+        //8Create a method inside the Course object called ListStudents() that contains the foreach loop.
         public void ListStudents()
         {
             Console.WriteLine("\nInside ListStudents:");
 
-            foreach (Student student in students)
+            //7) Using a foreach loop, iterate over the Students in the List<T> and output their first and last names to the console window. 
+            //(For this exercise, casting is no longer required.  Also, place each student name on its own line)
+            foreach (Student student in studentsList)
             {
-                Console.WriteLine("\twith the student {0}\n", student.firstName);
+                Console.WriteLine("\nStudent's First Name: {0} \n\tLast Name: {1}", student.firstName, student.lastName);
             }
         }
 
-        public ArrayList students = new ArrayList();
+        //6) Add the three Student objects to the List<T> inside the Course object.
+        public void AddStudent(Student s)
+        {
+            studentsList.Add(s);
+            Console.WriteLine("{0} added to the List", s.firstName);
+
+        }
+        public List<Student> studentsList = new List<Student>();       //1) Create a List<T>, to replace the ArrayList and to hold students
         Teacher[] arrayTeacher = new Teacher[3];
         public string name { get; set; }
         public string duration { get; set; }
@@ -115,10 +125,35 @@ namespace ConsoleApplication8
         {
             Course cSharp = new Course("Programming with C#");
 
-            Student joe = new Student("Joe", "Smith", "04/03/1950");    //5 Create 3 student objects
+            //4) Create 3 student objects.
+            Student joe = new Student("Joe", "Smith", "04/03/1950");
             Student bob = new Student("Bob", "Sanders", "01/08/1960");
             Student sam = new Student("Sam", "Peterson", "02/02/1970");
 
+            //6) Add the three Student objects to the List<T> inside the Course object.
+            cSharp.AddStudent(joe);
+            cSharp.AddStudent(bob);
+            cSharp.AddStudent(sam);
+
+            //5) Add 5 grades to the the Stack<T> in the each Student object. 
+            //(this does not have to be inside the constructor because you may not have grades for a student when you create a new student.)
+            foreach (Student student in cSharp.studentsList)
+            {
+                Random rnd = new Random();
+                Console.WriteLine("\nThe grades for {0} are:", student.firstName);
+                for (int i=0; i<5; i++)
+                {                
+                    int grade = rnd.Next(1, 10);
+                    student.Grades.Push(grade);
+                    Console.WriteLine("{0}", grade);
+                }
+            }
+
+            //9) Call the ListStudents() method from Main().
+            cSharp.ListStudents();
+
+            Console.WriteLine("\n\nEnd of the program");
+            Console.ReadLine();
         }
     }
 }
