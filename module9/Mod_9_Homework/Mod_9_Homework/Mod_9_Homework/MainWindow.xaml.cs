@@ -50,6 +50,9 @@ namespace Mod_9_Homework
             studentsList.Add(student);
             Console.WriteLine("Student {0} Added", s.firstName);
             MessageBox.Show("Student Added");
+            txtFirstName.Clear();
+            txtLastName.Clear();
+            txtCity.Clear();
         }
     }
 }
