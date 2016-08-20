@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,14 +31,14 @@ namespace Mod_9_Homework
         public string lastName { get; set; }
         public string city { get; set; }
     }
-    
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
         public List<Student> studentsList = new List<Student>();
-        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -46,9 +46,9 @@ namespace Mod_9_Homework
 
         private void btnCreateStudent_Click(object sender, RoutedEventArgs e)
         {
-            var student = new Student(txtFirstName.text, txtLastName.text, txtCity.text);
+            var student = new Student(txtFirstName.Text, txtLastName.Text, txtCity.Text);
             studentsList.Add(student);
-            Console.WriteLine("Student {0} Added", s.firstName);
+            Console.WriteLine("Student {0} Added", student.firstName);
             MessageBox.Show("Student Added");
             txtFirstName.Clear();
             txtLastName.Clear();
