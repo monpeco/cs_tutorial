@@ -38,7 +38,7 @@ namespace Mod_9_Homework
     public partial class MainWindow : Window
     {
         public List<Student> studentsList = new List<Student>();
-
+        int currentPosition = 0, countStudents = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -48,11 +48,53 @@ namespace Mod_9_Homework
         {
             var student = new Student(txtFirstName.Text, txtLastName.Text, txtCity.Text);
             studentsList.Add(student);
-            Console.WriteLine("Student {0} Added", student.firstName);
             MessageBox.Show("Student Added");
             txtFirstName.Clear();
             txtLastName.Clear();
             txtCity.Clear();
+            MessageBox.Show("Clean the TextBox");
+            student = studentsList[0];
+            txtFirstName.Text = student.firstName;
+            txtLastName.Text = student.lastName;
+            txtCity.Text = student.city;
+            countStudents++;
+        }
+
+        private void Grid_Initialized(object sender, EventArgs e)
+        {
+            MessageBox.Show("1) This example has 3 students preloaded\n2) To add a student, first click on txtFirstName (to clean all TextBox)");
+
+            studentsList.Add(new Student("Joe", "Smith", "Chicago"));
+            studentsList.Add(new Student("Sam", "Jones", "Houston"));
+            studentsList.Add(new Student("Mike", "Glavine", "San Diego"));
+
+            var student = studentsList[0];
+            txtFirstName.Text = student.firstName;
+            txtLastName.Text = student.lastName;
+            txtCity.Text = student.city;
+        }
+
+        private void btnPrevious_Click(object sender, RoutedEventArgs e)
+        {
+            var student = studentsList[(--currentPosition) % studentsList.Count];
+            txtFirstName.Text = student.firstName;
+            txtLastName.Text = student.lastName;
+            txtCity.Text = student.city;
+        }
+
+        private void txtFirstName_GotFocus(object sender, RoutedEventArgs e)
+        {
+            txtFirstName.Clear();
+            txtLastName.Clear();
+            txtCity.Clear();
+        }
+
+        private void btnNext_Click(object sender, RoutedEventArgs e)
+        {
+            var student = studentsList[(++currentPosition) % studentsList.Count];
+            txtFirstName.Text = student.firstName;
+            txtLastName.Text = student.lastName;
+            txtCity.Text = student.city;
         }
     }
 }
