@@ -92,7 +92,7 @@ Create a method with a signature that matches the delegate for the event.
 Use the addition assignment operator (**+=**) to attach your event handler method to the event.
 For example, suppose you have created an instance of the Coffee struct named coffee1. In your Inventory class, you want to subscribe to the OutOfBeans that may be raised by coffee1.
 
-     Note: The previous topic shows how the Coffee struct, the OutOfBeans event, and the OutOfBeansHandler delegate are defined.
+Note: The previous topic shows how the Coffee struct, the OutOfBeans event, and the OutOfBeansHandler delegate are defined.
 
 The following example shows how to subscribe to an event:
 ```c#
@@ -124,3 +124,35 @@ public void UnsubscribeFromEvent()
 }
 ```
 
+#Another explanation on Events and Delegates
+
+###Events
+* A mechanism for communication between classes
+* Used in building **Loosely Couped Applications**
+* Helps extending applications
+
+in many resources you are going to find another terms, like:
+* publisher = envent sender
+* subscriber = event receiver
+
+###EventHandler
+```c#
+//Event Handler
+//Event that is call by the publisher when the event is raised
+public void OnVideoEncoded(object source, EventArgs e)
+{
+   //Should match the signature with the delegate
+}
+```
+But the publisher need to know what method is going to call, there is when the **Delegate** come in
+
+###Delegate
+* Agreement between Publisher and Subscriber
+* Determines the signature of the **event handler** method is Subscriber
+* The name doesn't really care, the signature is the important thing
+
+###Implementt an Event on the Publisher
+
+* Define a delegate
+* Define an event
+* Raise the event
