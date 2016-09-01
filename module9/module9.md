@@ -147,12 +147,13 @@ public void OnVideoEncoded(object source, EventArgs e)
 But the publisher need to know what method is going to call, there is when the **Delegate** come in
 
 ###Delegate
+The basic characteristics of a **Delegate** are:
 * Agreement between Publisher and Subscriber
 * Determines the signature of the **event handler** method is Subscriber
 * The name doesn't really care, the signature is the important thing
 
-###Implementt an Event on the Publisher
-
+###Implement an Event on the Publisher
+Steps to implement an **Event**:
 * Define a delegate
 * Define an event
 * Raise the event
