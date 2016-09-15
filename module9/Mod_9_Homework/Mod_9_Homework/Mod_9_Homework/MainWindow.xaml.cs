@@ -13,9 +13,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace Mod_9_Homework
 {
-    //Declaring Class Student
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    ///
+    
+    //Add a new class to the project to represent a Student
     public class Student
     {
         // constructor
@@ -24,28 +30,36 @@ namespace Mod_9_Homework
             this.firstName = firstName;
             this.lastName = lastName;
             this.city = city;
-            Console.WriteLine("\nfirstName: {0},\nlastName: {1}, \ncity: {2}", this.firstName, this.lastName, this.city);
         }
         // Properties
         public string firstName { get; set; }
         public string lastName { get; set; }
         public string city { get; set; }
-    }
 
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    }
+    
     public partial class MainWindow : Window
     {
-        public List<Student> studentsList = new List<Student>();
-        int currentPosition = 0, countStudents = 0;
+    	int currentPosition = 0, countStudents = 0;
+    	List<Student> studentsList = new List<Student>();       //Create a collection to store Student objects
         public MainWindow()
         {
             InitializeComponent();
-        }
 
-        private void btnCreateStudent_Click(object sender, RoutedEventArgs e)
-        {
+            MessageBox.Show("1) This example has 3 students preloaded\n2) To add a student, first click on txtFirstName (to clean all TextBox)");
+
+            studentsList.Add(new Student("Joe", "Smith", "Chicago"));
+            studentsList.Add(new Student("Sam", "Jones", "Houston"));
+            studentsList.Add(new Student("Mike", "Glavine", "San Diego"));
+
+            var student = studentsList[0];
+            txtFirstName.Text = student.firstName;
+            txtLastName.Text = student.lastName;
+            txtCity.Text = student.city;
+			//MessageBox.Show("Hello World!");
+        }
+		void btnCreateStudent_Click(object sender, RoutedEventArgs e)
+		{
             var student = new Student(txtFirstName.Text, txtLastName.Text, txtCity.Text);
             studentsList.Add(student);
             MessageBox.Show("Student Added");
@@ -58,23 +72,8 @@ namespace Mod_9_Homework
             txtLastName.Text = student.lastName;
             txtCity.Text = student.city;
             countStudents++;
-        }
-
-        private void Grid_Initialized(object sender, EventArgs e)
-        {
-            MessageBox.Show("1) This example has 3 students preloaded\n2) To add a student, first click on txtFirstName (to clean all TextBox)");
-
-            studentsList.Add(new Student("Joe", "Smith", "Chicago"));
-            studentsList.Add(new Student("Sam", "Jones", "Houston"));
-            studentsList.Add(new Student("Mike", "Glavine", "San Diego"));
-
-            var student = studentsList[0];
-            txtFirstName.Text = student.firstName;
-            txtLastName.Text = student.lastName;
-            txtCity.Text = student.city;
-        }
-
-        private void btnPrevious_Click(object sender, RoutedEventArgs e)
+		}
+		private void btnPrevious_Click(object sender, RoutedEventArgs e)
         {
             var student = studentsList[(--currentPosition) % studentsList.Count];
             txtFirstName.Text = student.firstName;
