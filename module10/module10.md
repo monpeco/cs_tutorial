@@ -69,7 +69,7 @@ foreach (var emp in emps)
 ###Grouping Data
 
 The following code example shows how to use a group clause to group the returned employees by their job title ID.
-```
+```c#
 // Using a group Clause
 var emps = from e in Employees
                    group e by e.JobTitle into eGroup
@@ -89,7 +89,7 @@ var emps = from e in Employees
 ###Navigating Data
 
 The following code example shows how to use navigation properties to retrieve data from the Employees entity and the related JobTitles entity.
-```
+```c#
 // Using Dot Notation to Navigate Related Entities
 var emps = from e in Employees
 select new
@@ -101,7 +101,7 @@ select new
 ###Inner Join
 
 The followng code is an example of an inner join in LINQ:
-```
+```c#
 var innerJoinQuery = from order in orders
 join prod in products on category.ID equals prod.CategoryID
 select new { ProductName = prod.Name, Category = category.Name }; //produces flat sequence
@@ -126,7 +126,7 @@ clause will produce an empty array for that item.
 ###Left Outer Join
 
 In a left outer join, all elements in the left source are returned, even if there are no matching elements are in the right sequence. A left outer join is performed using the DefaultIfEmpty method in combination with a group join. This is done to specify a default right-side element to produce in the even that a left-side element is not matched. The following code sample demonstrates this:
-```
+```c#
 var leftOuterJoinQuery = from category in categories
 join prod in products on category.ID equals prod.CategoryID into prodGroup
 from item in prodGroup.DefaultIfEmpty(new Product { Name = String.Empty, CategoryID = 0 })
