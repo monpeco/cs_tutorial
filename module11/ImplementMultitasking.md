@@ -189,3 +189,249 @@ Task.WaitAll(tasks);
 // Continue with execution.
 ```
 
+#Returning Values from a Task
+
+###Returning a Value from a Task
+
+For tasks to be effective in real-world scenarios, you need to be able to create tasks that can return values, or results, to the code that initiated the task. The regular Task class does not enable you to do this. However, the Task Parallel Library also includes the generic Task<TResult> class that you can use when you need to return a value.
+
+When you create an instance of *Task<TResult>*, you use the type parameter to specify the type of the result that the task will return. The Task<TResult> class exposes a read-only property named Result. After the task has finished executing, you can use the Result property to retrieve the return value of the task. The Result property is the same type as the task’s type parameter.
+
+The following example shows how to use the Task<TResult> class.
+
+```c#
+// Retrieving a Value from a Task
+// Create and queue a task that returns the day of the week as a string.
+Task<string> task1 = Task.Run<string>( () => DateTime.Now.DayOfWeek.ToString() );
+// Retrieve and display the task result.
+Console.WriteLine(task1.Result);
+```
+
+If you access the Result property before the task has finished running, your code will wait until a result is available before proceeding.
+
+
+#Canceling Long-Running Tasks
+
+###Canceling Long-Running Tasks
+
+Tasks are often used to perform long-running operations without blocking the UI thread, because of their asynchronous nature. In some cases, you will want to give your users the opportunity to cancel a task if they are tired of waiting. However, it would be dangerous to simply abort the task on demand, because this could leave your application data in an unknown state. Instead, the Task Parallel Library uses cancellation tokens to support a cooperative cancellation model. At a high level, the cancellation process works as follows:
+
+When you create a task, you also create a cancellation token.
+You pass the cancellation token as an argument to your delegate method.
+On the thread that created the task, you request cancellation by calling the Cancel method on the cancellation token source.
+In your task method, you can check the status of the cancellation token at any point. If the instigator has requested that the task be cancelled, you can terminate your task logic gracefully, possibly rolling back any changes resulting from the work that the task has performed.
+Typically, you would check whether the cancellation token has been set to canceled at one or more convenient points in your task logic. For example, if your task logic iterates over a collection, you might check for cancellation after each iteration.
+
+The following code example shows how to cancel a task.
+
+```c#
+// Cancelling a Task
+// Create a cancellation token source and obtain a cancellation token.
+CancellationTokenSource cts = new CancellationTokenSource();
+CancellationToken ct = cts.Token;
+// Create and start a task.
+Task.Run( () => doWork(ct) );
+// Method run by the task.
+private void doWork(CancellationToken token)
+{
+   …
+   // Check for cancellation.
+   if(token.IsCancellationRequested)
+   {
+      // Tidy up and finish.
+      …
+      return;
+   }
+   // If the task has not been cancelled, continue running as normal.
+   …
+}
+```
+
+This approach works well if you do not need to check whether the task ran to completion. Each task exposes a Status property that enables you to monitor the current status of the task in the task life cycle. If you cancel a task by returning the task method, as shown in the previous example, the task status is set to RanToCompletion. In other words, the task has no way of knowing why the method returned—it may have returned in response to a cancellation request, or it may simply have completed its logic.
+
+If you want to cancel a task and be able to confirm that it was cancelled, you need to pass the cancellation token as an argument to the task constructor in addition to the delegate method. In your task method, you check the status of the cancellation token. If the instigator has requested the cancellation of the task, you throw an OperationCanceledException exception. When an OperationCanceledException exception occurs, the Task Parallel Library checks the cancellation token to verify whether a cancellation was requested. If it was, the Task Parallel Library handles the OperationCanceledException exception, sets the task status to Canceled, and throws a TaskCanceledException exception. In the code that created the cancellation request, you can catch this TaskCanceledException exception and deal with the cancellation accordingly.
+
+To check whether a cancellation was requested and throw an OperationCanceledException exception if it was, you call the ThrowIfCancellationRequested method on the cancellation token.
+
+The following code example shows how to cancel a task by throwing an OperationCanceledException exception.
+
+```c#
+// Canceling a Task by Throwing an Exception
+// Create a cancellation token source and obtain a cancellation token.
+CancellationTokenSource cts = new CancellationTokenSource();
+CancellationToken ct = cts.Token;
+// Create and start a task.
+Task.Run( () => doWork(ct) );
+// Method run by the task.
+private void doWork(CancellationToken token);
+{
+   …
+   // Throw an OperationCanceledException if cancellation was requested.
+   token.ThrowIfCancellationRequested();   
+   // If the task has not been cancelled, continue running as normal.
+   …
+}
+```
+
+
+#Cancelling Long-Running Tasks
+
+###Cancelling Long-Running Tasks
+
+Tasks are often used to perform long-running operations without blocking the UI thread, because of their asynchronous nature. In some cases, you will want to give your users the opportunity to cancel a task if they are tired of waiting. However, it would be dangerous to simply abort the task on demand, because this could leave your application data in an unknown state. Instead, the Task Parallel Library uses cancellation tokens to support a cooperative cancellation model. At a high level, the cancellation process works as follows:
+
+When you create a task, you also create a cancellation token.
+You pass the cancellation token as an argument to your delegate method.
+On the thread that created the task, you request cancellation by calling the Cancel method on the cancellation token source.
+In your task method, you can check the status of the cancellation token at any point. If the instigator has requested that the task be cancelled, you can terminate your task logic gracefully, possibly rolling back any changes resulting from the work that the task has performed.
+Typically, you would check whether the cancellation token has been set to canceled at one or more convenient points in your task logic. For example, if your task logic iterates over a collection, you might check for cancellation after each iteration.
+
+The following code example shows how to cancel a task.
+
+```c#
+// Cancelling a Task
+// Create a cancellation token source and obtain a cancellation token.
+CancellationTokenSource cts = new CancellationTokenSource();
+CancellationToken ct = cts.Token;
+// Create and start a task.
+Task.Run( () => doWork(ct) );
+// Method run by the task.
+private void doWork(CancellationToken token)
+{
+   …
+   // Check for cancellation.
+   if(token.IsCancellationRequested)
+   {
+      // Tidy up and finish.
+      …
+      return;
+   }
+   // If the task has not been cancelled, continue running as normal.
+   …
+}
+```
+
+This approach works well if you do not need to check whether the task ran to completion. Each task exposes a Status property that enables you to monitor the current status of the task in the task life cycle. If you cancel a task by returning the task method, as shown in the previous example, the task status is set to RanToCompletion. In other words, the task has no way of knowing why the method returned—it may have returned in response to a cancellation request, or it may simply have completed its logic.
+
+If you want to cancel a task and be able to confirm that it was cancelled, you need to pass the cancellation token as an argument to the task constructor in addition to the delegate method. In your task method, you check the status of the cancellation token. If the instigator has requested the cancellation of the task, you throw an OperationCanceledException exception. When an OperationCanceledException exception occurs, the Task Parallel Library checks the cancellation token to verify whether a cancellation was requested. If it was, the Task Parallel Library handles the OperationCanceledException exception, sets the task status to Canceled, and throws a TaskCanceledException exception. In the code that created the cancellation request, you can catch this TaskCanceledException exception and deal with the cancellation accordingly.
+
+To check whether a cancellation was requested and throw an OperationCanceledException exception if it was, you call the ThrowIfCancellationRequested method on the cancellation token.
+
+The following code example shows how to cancel a task by throwing an OperationCanceledException exception.
+
+```c#
+// Canceling a Task by Throwing an Exception
+// Create a cancellation token source and obtain a cancellation token.
+CancellationTokenSource cts = new CancellationTokenSource();
+CancellationToken ct = cts.Token;
+// Create and start a task.
+Task.Run( () => doWork(ct) );
+// Method run by the task.
+private void doWork(CancellationToken token);
+{
+   …
+   // Throw an OperationCanceledException if cancellation was requested.
+   token.ThrowIfCancellationRequested();   
+   // If the task has not been cancelled, continue running as normal.
+   …
+}
+```
+
+
+
+#Running Tasks in Parallel
+
+The Task Parallel Library includes a static class named *Parallel*. The Parallel class provides a range of methods that you can use to execute tasks simultaneously.
+
+###Executing a Set of Tasks Simultaneously
+
+If you want to run a fixed set of tasks in parallel, you can use the Parallel.Invoke method. When you call this method, you use lambda expressions to specify the tasks that you want to run simultaneously. You do not need to explicitly create each task—the tasks are created implicitly from the delegates that you supply to the Parallel.Invoke method.
+
+The following code example shows how to use the Parallel.Invoke method to run several tasks in parallel.
+
+```c#
+// Using the Parallel.Invoke Method
+Parallel.Invoke( () => MethodForFirstTask(), 
+                           () => MethodForSecondTask(),
+                           () => MethodForThirdTask() );
+```
+
+###Running Loop Iterations in Parallel
+
+The Parallel class also provides methods that you can use to run for and foreach loop iterations in parallel. Clearly it will not always be appropriate to run loop iterations in parallel. For example, if you want to compare sequential values, you must run your loop iterations sequentially. However, if each loop iteration represents an independent operation, running loop iterations in parallel enables you to maximize your use of the available processing power.
+
+To run for loop iterations in parallel, you can use the Parallel.For method. This method has several overloads to cater to many different scenarios. In its simplest form, the Parallel.For method takes three parameters:
+
+An Int32 parameter that represents the start index for the operation, inclusive.
+An Int32 parameter that represents the end index for the operation, exclusive.
+An Action<Int32> delegate that is executed once per iteration.
+The following code example shows how to use a Parallel.For loop. In this example, each element of an array is set to the square root of the index value. This is a simple example of a loop in which the order of the iterations does not matter.
+
+```c#
+// Using a Parallel.For Loop
+int from = 0;
+int to = 500000;
+double[] array = new double[capacity];
+// This is a sequential implementation:
+for(int index = 0; index < 500000; index++)
+{
+   array[index] = Math.Sqrt(index);
+}
+// This is the equivalent parallel implementation:
+Parallel.For(from, to, index =>
+{
+   array[index] = Math.Sqrt(index);
+});
+```
+
+To run foreach loop iterations in parallel, you can use the Parallel.ForEach method. Like the Parallel.For method, the Parallel.ForEach method includes many different overloads. In its simplest form, the Parallel.ForEach method takes two parameters:
+
+An IEnumerable<TSource> collection that you want to iterate over.
+An Action<TSource> delegate that is executed once per iteration.
+The following code example shows how to use a Parallel.ForEach loop. In this example, you iterate over a generic list of Coffee objects. For each item, you call a method named CheckAvailability that accepts a Coffee object as an argument.
+
+```c#
+// Using a Parallel.ForEach Loop
+var coffeeList = new List<Coffee>();
+// Populate the coffee list…
+// This is a sequential implementation:
+foreach(Coffee coffee in coffeeList)
+{
+   CheckAvailability(coffee);
+}
+// This is the equivalent parallel implementation:
+Parallel.ForEach(coffeeList, coffee => CheckAvailability(coffee));
+```
+
+#Using Parallel LINQ
+
+Parallel LINQ (PLINQ) is an implementation of Language-Integrated Query (LINQ) that supports parallel operations. In most cases, PLINQ syntax is identical to regular LINQ syntax. When you write a LINQ expression, you can “opt in” to PLINQ by calling the AsParallel extension method on your IEnumerable data source.
+
+The following code example shows how to write a PLINQ query.
+
+```c#
+// Using PLINQ
+var coffeeList = new List<Coffee>();
+// Populate the coffee list…
+var strongCoffees = 
+   from coffee in coffeeList.AsParallel()
+   where coffee.Strength > 3
+   select coffee;
+```
+
+If you want the results ordered, you can use AsOrdered() in the query as shown in this code example.
+
+```c#
+// Using PLINQ
+var coffeeList = new List<Coffee>();
+// Populate the coffee list…
+var strongCoffees = 
+   from coffee in coffeeList.AsParallel().AsOrdered()
+   where coffee.Strength > 3
+   select coffee;
+```
+
+This is only an introduction to PLINQ.  For more information visit the Parallel LINQ Reference page on MSDN.
+
+
+
