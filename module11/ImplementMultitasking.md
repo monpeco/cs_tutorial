@@ -435,3 +435,150 @@ This is only an introduction to PLINQ.  For more information visit the Parallel 
 
 
 
+#Linking Tasks
+
+Sometimes it is useful to sequence tasks. For example, you might require that if a task completes successfully, another task is run, or if the task fails, a different task is run that possibly needs to perform some kind of recovery process. A task that runs only when a previous task finishes is called a continuation. This approach enables you to construct a pipeline of background operations.
+
+Additionally, a task may spawn other tasks if the work that it needs to perform is also multithreaded in nature. The parent task (the task that spawned the new or nested tasks) can wait for the nested tasks to complete before it finishes itself, or it can return and let the child tasks continue running asynchronously. Tasks that cause the parent task to wait are called child tasks.
+
+###Continuation Tasks
+
+Continuation tasks enable you to chain multiple tasks together so that they execute one after another. The task that invokes another task on completion is known as the antecedent, and the task that it invokes is known as the continuation. You can pass data from the antecedent to the continuation, and you can control the execution of the task chain in various ways. To create a basic continuation, you use the Task.ContinueWith method.
+
+The following code example shows how to create a task continuation.
+
+```c#
+// Creating a Task Continuation
+// Create a task that returns a string.
+Task<string> firstTask = new Task<string>( () => return "Hello" );
+// Create the continuation task. 
+// The delegate takes the result of the antecedent task as an argument.
+Task<string> secondTask = firstTask.ContinueWith( (antecedent) =>
+   {
+      return String.Format("{0}, World!", antecedent.Result));
+   }
+// Start the antecedent task.
+firstTask.Start();
+// Use the continuation task's result.
+Console.WriteLine(secondTask.Result);
+// Displays "Hello, World!"
+```
+
+Notice that when you create the continuation task, you are providing the result of the first task as an argument to the delegate of the second task. For example, you might use the first task to collect some data and then invoke a continuation task to process the data. Continuation tasks do not have to return the same result type as their antecedent tasks.     
+
+Note: Continuations enable you to implement the Promise pattern. This is a common idiom that many asynchronous environments use to ensure that operations perform in a guaranteed sequence.
+
+###Nested Tasks and Child Tasks
+
+A nested task is simply a task that you create within the delegate of another task. When you create tasks in this way, the nested task and the outer task are essentially independent. The outer task does not need to wait for the nested task to complete before it finishes.
+
+A child task is a type of nested task, except that you specify the AttachedToParent option when you create the child task. In this case, the child task and the parent task become far more closely connected. The status of the parent task depends on the status of any child tasks—in other words, a parent task cannot complete until all of its child tasks have completed. The parent task will also propagate any exceptions that its child tasks throw.
+
+To illustrate the difference between nested tasks and child tasks, consider these two simple examples.
+
+The following code example shows how to create a nested task.
+
+```c#
+// Creating Nested Tasks
+var outer = Task.Run( () =>
+{
+   Console.WriteLine("Outer task starting…");
+   var inner = Task.Run( () =>
+   {
+      Console.WriteLine("Nested task starting…");
+      Thread.SpinWait(500000);
+      Console.WriteLine("Nested task completing…");
+   });
+});
+outer.Wait();
+Console.WriteLine("Outer task completed.");
+/* Output:
+      Outer task starting…
+      Nested task starting…
+      Outer task completed.
+      Nested task completing…
+*/
+```
+
+In this case, due to the delay in the nested task, the outer task completes before the nested task.
+
+The following code example shows how to create a child task.
+
+```c#
+// Creating Child Tasks
+var parent = Task.Run( () =>
+{
+   Console.WriteLine("Parent task starting…");
+   var child = Task.Run( () =>
+   {
+      Console.WriteLine("Child task starting…");
+      Thread.SpinWait(500000);
+      Console.WriteLine("Child task completing…");
+   }, TaskCreationOptions.AttachedToParent);
+});
+parent.Wait();
+Console.WriteLine("Parent task completed.");
+/* Output:
+      Parent task starting…
+      Child task starting…
+      Child task completing…
+      Parent task completed.
+*/
+```
+
+Note that the preceding example is essentially identical to the nested task example, except that in this case, the child task is created by using the AttachedToParent option. As a result, in this case, the parent task waits for the child task to complete before completing itself.
+Nested tasks are useful because they enable you to break down asynchronous operations into smaller units that can themselves be distributed across available threads. By contrast, it is more useful to use parent and child tasks when you need to control synchronization by ensuring that certain child tasks are complete before the parent task returns.
+
+
+###Handling Task Exceptions
+
+When a task throws an exception, the exception is propagated back to the thread that initiated the task (the joining thread). The task might be linked to other tasks through continuations or child tasks, so multiple exceptions may be thrown. To ensure that all exceptions are propagated back to the joining thread, the Task Parallel Library bundles any exceptions together in an AggregateException object. This object exposes all of the exceptions that occurred through an InnerExceptions collection.
+
+To catch exceptions on the joining thread, you must wait for the task to complete. You do this by calling the Task.Wait method in a try block and then catching an AggregateException exception in the corresponding catch block. A common exception-handling scenario is to catch the TaskCanceledException exception that is thrown when you cancel a task.
+
+The following code example shows how to handle task exceptions.
+
+```c#
+// Catching Task Exceptions
+static void Main(string[] args)
+{
+   // Create a cancellation token source and obtain a cancellation token.
+   CancellationTokenSource cts = new CancellationTokenSource();
+   CancellationToken ct = cts.Token;
+   // Create and start a long-running task.
+   var task1 = Task.Run(() => doWork(ct),ct);
+   // Cancel the task.
+   cts.Cancel();
+   // Handle the TaskCanceledException.
+   try
+   {
+      task1.Wait();
+   }
+   catch(AggregateException ae)
+   {
+      foreach(var inner in ae.InnerExceptions)
+      {
+         if(inner is TaskCanceledException)
+         {
+            Console.WriteLine("The task was cancelled.");
+            Console.ReadLine();
+         }
+         else
+         {
+            // If it's any other kind of exception, re-throw it.
+            throw;
+         }
+      }
+   }
+}
+// Method run by the task.
+private void doWork(CancellationToken token);
+{
+   for (int i = 0; i < 100; i++)
+   {
+      Thread.SpinWait(500000);
+      // Throw an OperationCanceledException if cancellation was requested.
+      token.ThrowIfCancellationRequested():
+   }
+}
+```
