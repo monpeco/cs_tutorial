@@ -259,3 +259,89 @@ private async void btnCheckUrl_Click(object sender, RoutedEventArgs e)
    lblResult.Content = String.Format("The URL returned the following status code: {0}", response.StatusCode);
 }
 ```
+
+#Handling Exceptions from Awaitable Methods
+
+###Handling Exceptions from Awaitable Methods
+
+When you perform asynchronous operations with the async and await keywords, you can handle exceptions in the same way that you handle exceptions in synchronous code, which is by using try/catch blocks.
+
+The following code example shows how to catch an exception that an awaitable method has thrown.
+
+```c#
+// Catching an Awaitable Method Exception
+private async void btnThrowError_Click(object sender, RoutedEventArgs e)
+{
+   using (WebClient client = new WebClient())
+   {
+      try
+      {
+         string data = await client.DownloadStringTaskAsync("http://fourthcoffee/bogus");
+      }
+      catch (WebException ex)
+      {
+         lblResult.Content = ex.Message;
+      }
+   }
+}
+```
+
+In the previous example, the click event handler for a button calls the WebClient.DownloadStringTaskAsync method asynchronously by using the await operator. The URL that is provided is invalid, so the method throws a WebException exception. Even though the operation is asynchronous, control returns to the btnThrowError_Click method when the asynchronous operation is complete and the exception is handled correctly. This works because behind the scenes, the Task Parallel Library is catching the asynchronous exception and re-throwing it on the UI thread.
+
+###Unobserved Exceptions
+
+When a task raises an exception, you can only handle the exception when the joining thread accesses the task, for example, by using the await operator or by calling the Task.Wait method. If the joining thread never accesses the task, the exception will remain unobserved. When the .NET Framework garbage collector (GC) detects that a task is no longer required, the task scheduler will throw an exception if any task exceptions remain unobserved. By default, this exception is ignored. However, you can implement an exception handler of last resort by subscribing to the TaskScheduler.UnobservedTaskException event. Within the exception handler, you can set the status of the exception to Observed to prevent any further propagation.
+
+The following code example shows how to subscribe to the TaskScheduler.UnobservedTaskException event.
+
+```c#
+// Implementing a Last-Resort Exception Handler
+static void Main(string[] args)
+{
+   // Subscribe to the TaskScheduler.UnobservedTaskException event and define an event handler.
+   TaskScheduler.UnobservedTaskException += (object sender, UnobservedTaskExceptionEventArgs e) =>
+      {
+         foreach (Exception ex in ((AggregateException)e.Exception).InnerExceptions)
+         {
+            Console.WriteLine(String.Format("An exception occurred: {0}", ex.Message));
+         }
+         // Set the exception status to Observed.
+         e.SetObserved();
+      }
+   // Launch a task that will throw an unobserved exception 
+   // by attempting to download an item from an invalid URL.
+   Task.Run(() =>
+      {
+         using(WebClient client = new WebClient())
+         {
+            client.DownloadStringTaskAsync("http://fourthcoffee/bogus");
+         }
+      });
+   // Give the task time to complete and then trigger garbage collection (for example purposes only).
+   Thread.Sleep(5000);
+   GC.WaitForPendingFinalizers();
+   GC.Collect();
+   Console.WriteLine("Execution complete.");
+   Console.ReadLine();
+}
+```
+
+If you use a debugger to step through this code, you will see that the UnobservedTaskException event is fired when the GC runs.
+In the .NET Framework 4.5, the .NET runtime ignores unobserved task exceptions by default and allows your application to continue executing. This contrasts with the default behavior in the .NET Framework 4.0, where the .NET runtime would terminate any processes that throw unobserved task exceptions. You can revert to the process termination approach by adding a ThrowUnobservedTaskExceptions element to your application configuration file.
+
+The following code example shows how to add a ThrowUnobservedTaskExceptions element to an application configuration file.
+
+```
+// Configuring the ThrowUnobservedTaskExceptions Element
+<configuration>
+   …
+   <runtime>
+      <ThrowUnobservedTaskExceptions enabled="true" />
+   </runtime>
+</configuration>
+```
+
+If you set ThrowUnobservedTaskExceptions to true, the .NET runtime will terminate any processes that contain unobserved task exceptions. A recommended best practice is to set this flag to true during application development and to remove the flag before you release your code.
+
+For more information , you can see: 
+Microsoft .NET Framework 4 (Web Installer): https://aka.ms/edx-dev204x-net02
