@@ -231,3 +231,31 @@ private void RemoveDuplicates(IEnumerable<string> coffees)
 
 In the previous example, the RemoveDuplicates callback method accepts a single argument of type IEnumerable<string> and does not return a value. To support this callback method, you add a parameter of type Action<IEnumerable<string>> to your asynchronous method. When you invoke the asynchronous method, you supply the name of the callback method as an argument.
 
+
+###working with APM Operations
+
+Many .NET Framework classes that support asynchronous operations do so by implementing a design pattern known as APM. The APM pattern is typically implemented as two methods: a BeginOperationName method that starts the asynchronous operation and an EndOperationName method that provides the results of the asynchronous operation. You typically call the EndOperationName method from within a callback method. For example, the HttpWebRequest class includes methods named BeginGetResponse and EndGetResponse. The BeginGetResponse method submits an asynchronous request to an Internet or intranet resource, and the EndGetResponse method returns the actual response that the Internet resource provides.
+
+Classes that implement the APM pattern use an IAsyncResult instance to represent the status of the asynchronous operation. The BeginOperationName method returns an IAsyncResult object, and the EndOperationName method includes an IAsyncResult parameter.
+The Task Parallel Library makes it easier to work with classes that implement the APM pattern. Rather than implementing a callback method to call the EndOperationName method, you can use the TaskFactory.FromAsync method to invoke the operation asynchronously and return the result in a single statement. The TaskFactory.FromAsync method includes several overloads to accommodate APM methods that take varying numbers of arguments.
+
+Consider a WPF application that verifies URLs that a user provides. The application consists of a box named txtUrl, a button named btnSubmitUrl, and a label named lblResults. The user types a URL in the box and then clicks the button. The click event handler for the button submits an asynchronous web request to the URL and then displays the status code of the response in the label. Rather than implementing a callback method to handle the response, you can use the TaskFactory.FromAsync method to perform the entire operation.
+
+The following code example shows how to use the TaskFactory.FromAsync method to submit an asynchronous web request and handle the response.
+
+```c#
+// Using the TaskFactory.FromAsync Method
+private async void btnCheckUrl_Click(object sender, RoutedEventArgs e)
+{
+   // Get the URL provided by the user.
+   string url = txtUrl.Text;
+   // Create an HTTP request.
+   HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+   // Submit the request and await a response.
+   HttpWebResponse response = 
+       await Task<WebResponse>.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, request) 
+          as HttpWebResponse;
+   // Display the status code of the response.
+   lblResult.Content = String.Format("The URL returned the following status code: {0}", response.StatusCode);
+}
+```
